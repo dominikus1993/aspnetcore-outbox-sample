@@ -8,6 +8,6 @@ public sealed class Order
 
 public sealed class OrderItem
 {
-    public Guid Id { get; set; }
+    public ProductId ItemId { get; set; }
     public int Quantity { get; set; }
 }

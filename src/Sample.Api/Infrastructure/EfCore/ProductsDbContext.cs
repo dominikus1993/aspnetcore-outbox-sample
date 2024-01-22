@@ -9,12 +9,28 @@ public sealed class ProductsDbContext : DbContext
     {
     }
 
-    public DbSet<WeatherForecast> WeatherForecasts { get; set; } = null!;
+    public DbSet<Product> Products { get; set; } = null!;
     public DbSet<OutBox> OutBox { get; set; } = null!;
     public DbSet<Order> Orders { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<Product>(product =>
+        {
+            product.HasKey(x => x.Id);
+            product.Property(x => x.Name).IsRequired();
+            product.Property(x => x.Description).IsRequired();
+            product.Property(x => x.Price).IsRequired();
+            product.Property(x => x.Quantity).IsRequired();
+        });
+        modelBuilder.Entity<Order>(order =>
+        {
+            order.HasKey(x => x.Id);
+            order.OwnsMany(x => x.Items, item =>
+            {
+                item.ToJson();
+            });
+        });
         modelBuilder.Entity<OutBox>(outBox =>
         {
             outBox.HasKey(x => x.Id);
