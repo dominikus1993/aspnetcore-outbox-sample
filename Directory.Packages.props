@@ -3,11 +3,13 @@
     <PackageVersion Include="Alba" Version="7.4.1" />
     <PackageVersion Include="AutoFixture.Xunit2" Version="4.18.1" />
     <PackageVersion Include="Datadog.Trace.Bundle" Version="2.45.0" />
+    <PackageVersion Include="EFCore.BulkExtensions.PostgreSql" Version="8.0.1" />
     <PackageVersion Include="EFCore.NamingConventions" Version="8.0.3" />
     <PackageVersion Include="FastEndpoints" Version="5.21.2" />
     <PackageVersion Include="FastEndpoints.Security" Version="5.21.2" />
     <PackageVersion Include="FastEndpoints.Swagger" Version="5.21.2" />
     <PackageVersion Include="AspNetCore.HealthChecks.UI" Version="6.0.5" />
+    <PackageVersion Include="FlexLabs.EntityFrameworkCore.Upsert" Version="8.0.0" />
     <PackageVersion Include="FluentAssertions" Version="6.12.0" />
     <PackageVersion Include="FluentValidation.AspNetCore" Version="11.3.0" />
     <PackageVersion Include="FluentValidation.DependencyInjectionExtensions" Version="11.3.0" />
@@ -43,6 +45,7 @@
     <PackageVersion Include="System.Text.RegularExpressions" Version="4.3.1" />
     <PackageVersion Include="Testcontainers" Version="3.7.0" />
     <PackageVersion Include="NBench" Version="2.0.1" />
+    <PackageVersion Include="Testcontainers.PostgreSql" Version="3.7.0" />
     <PackageVersion Include="Testcontainers.Redis" Version="3.7.0" />
     <PackageVersion Include="Verify.Xunit" Version="22.11.5" />
     <PackageVersion Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.17.1" />

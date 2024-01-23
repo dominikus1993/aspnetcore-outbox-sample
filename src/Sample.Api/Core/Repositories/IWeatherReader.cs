@@ -1,6 +1,8 @@
-﻿namespace Sample.Api.Core.Repositories;
+﻿using Sample.Api.Core.Model;
 
-public interface IProductReader
+namespace Sample.Api.Core.Repositories;
+
+public interface IProductsReader
 {
-    IAsyncEnumerable<WeatherForecast> GetProductsAsync(IEnumerable<ProductId> productIds, CancellationToken cancellationToken = default);
+    IAsyncEnumerable<Product> GetProductsAsync(IEnumerable<ProductId> productIds, CancellationToken cancellationToken = default);
 }

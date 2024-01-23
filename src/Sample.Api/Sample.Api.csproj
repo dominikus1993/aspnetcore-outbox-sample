@@ -8,7 +8,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="EFCore.BulkExtensions.PostgreSql" />
     <PackageReference Include="EFCore.NamingConventions" />
+    <PackageReference Include="FlexLabs.EntityFrameworkCore.Upsert" />
     <PackageReference Include="Mediator.Abstractions" />
     <PackageReference Include="Mediator.SourceGenerator">
       <PrivateAssets>all</PrivateAssets>

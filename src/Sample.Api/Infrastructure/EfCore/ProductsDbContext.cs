@@ -40,4 +40,11 @@ public sealed class ProductsDbContext : DbContext
             outBox.Property(x => x.ProcessedAtTimestamp);
         });
     }
+
+    public void CleanAllTables()
+    {
+        Products.ExecuteDelete();
+        OutBox.ExecuteDelete();
+        Orders.ExecuteDelete();
+    }
 }
