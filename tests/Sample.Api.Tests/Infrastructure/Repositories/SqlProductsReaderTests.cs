@@ -1,18 +1,20 @@
-﻿using Sample.Api.Core.Repositories;
+﻿using AutoFixture.Xunit2;
+using Sample.Api.Core.Model;
+using Sample.Api.Core.Repositories;
 using Sample.Api.Infrastructure.EfCore;
 using Sample.Api.Infrastructure.Repositories;
 using Sample.Api.Tests.Fixtures;
 
 namespace Sample.Api.Tests.Infrastructure.Repositories;
 
-public sealed class SqlProductsReaderTests : IClassFixture<PostgresFixture>, IDisposable, IAsyncDisposable
+public sealed class SqlProductsReaderTests : IClassFixture<PostgresFixture>, IDisposable
 {
     private readonly PostgresFixture _postgresFixture;
     private readonly IProductsReader _productsReader;
     private readonly IProductsWriter _productsWriter;
     private readonly ProductsDbContext _productsDbContext;
     
-    SqlProductsReaderTests(PostgresFixture postgresFixture)
+    public SqlProductsReaderTests(PostgresFixture postgresFixture)
     {
         _postgresFixture = postgresFixture;
         _productsDbContext = _postgresFixture.DbContextFactory.CreateDbContext();
@@ -20,13 +22,20 @@ public sealed class SqlProductsReaderTests : IClassFixture<PostgresFixture>, IDi
         _productsWriter = new SqlProductsWriter(_productsDbContext);
     }
 
-    public void Dispose()
+    [Theory]
+    [AutoData]
+    public async Task TestWhenProductExists(Product[] products)
     {
-        _productsDbContext.Dispose();
+        await _productsWriter.InsertMany(products);
+
+        var productsFromDb = await _productsReader.GetProductsAsync(products.Select(p => p.Id)).ToArrayAsync();
+        
+        Assert.Equal(products.Length, productsFromDb.Length);
     }
 
-    public async ValueTask DisposeAsync()
+    public void Dispose()
     {
-        await _productsDbContext.DisposeAsync();
+        _productsDbContext.CleanAllTables();
+        _productsDbContext.Dispose();
     }
 }

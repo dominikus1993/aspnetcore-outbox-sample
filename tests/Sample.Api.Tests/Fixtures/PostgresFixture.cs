@@ -39,8 +39,14 @@ public sealed class PostgresFixture : IAsyncLifetime
                     optionsBuilder.CommandTimeout(500);
                 }).UseSnakeCaseNamingConvention();
         DbContextFactory = new ProductsDbContextFactory(builder);
+        await MigrateAsync();
     }
 
+    public async Task MigrateAsync()
+    {
+        await using var context = await DbContextFactory.CreateDbContextAsync();
+        await context.Database.MigrateAsync();
+    }
     public void Clean()
     {
         using var context = DbContextFactory.CreateDbContext();

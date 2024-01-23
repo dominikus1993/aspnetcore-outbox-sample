@@ -18,6 +18,7 @@ public sealed class ProductsDbContext : DbContext
         modelBuilder.Entity<Product>(product =>
         {
             product.HasKey(x => x.Id);
+            product.Property(x => x.Id).ValueGeneratedNever();
             product.Property(x => x.Name).IsRequired();
             product.Property(x => x.Description).IsRequired();
             product.Property(x => x.Price).IsRequired();
@@ -26,6 +27,7 @@ public sealed class ProductsDbContext : DbContext
         modelBuilder.Entity<Order>(order =>
         {
             order.HasKey(x => x.Id);
+            order.Property(x => x.Id).ValueGeneratedNever();
             order.OwnsMany(x => x.Items, item =>
             {
                 item.ToJson();
@@ -34,6 +36,7 @@ public sealed class ProductsDbContext : DbContext
         modelBuilder.Entity<OutBox>(outBox =>
         {
             outBox.HasKey(x => x.Id);
+            outBox.Property(x => x.Id).ValueGeneratedNever();
             outBox.Property(x => x.Type).IsRequired();
             outBox.Property(x => x.Data).IsRequired().HasColumnType("jsonb");
             outBox.Property(x => x.CreatedAtTimestamp).IsRequired();
