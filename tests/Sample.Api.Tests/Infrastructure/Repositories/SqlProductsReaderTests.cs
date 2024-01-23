@@ -32,6 +32,17 @@ public sealed class SqlProductsReaderTests : IClassFixture<PostgresFixture>, IDi
         
         Assert.Equal(products.Length, productsFromDb.Length);
     }
+    
+    [Theory]
+    [AutoData]
+    public async Task TestWhenProductNotExists(Product[] products, Product anotherProduct)
+    {
+        await _productsWriter.InsertMany(products);
+
+        var productsFromDb = await _productsReader.GetProductsAsync([anotherProduct.Id]).ToArrayAsync();
+        
+        Assert.Empty(productsFromDb);
+    }
 
     public void Dispose()
     {
