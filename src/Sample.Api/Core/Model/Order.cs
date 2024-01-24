@@ -15,7 +15,7 @@ public sealed class Order
     public OrderNumber OrderNumber { get; set; }
     public OrderState State { get; set; }
     public IReadOnlyList<OrderItem> Items { get; set; } = new List<OrderItem>();
-
+    
     public Order()
     {
         
