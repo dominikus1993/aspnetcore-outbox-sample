@@ -35,7 +35,6 @@ public sealed class PostgresFixture : IAsyncLifetime
                 optionsBuilder =>
                 {
                     optionsBuilder.MigrationsAssembly(typeof(ProductsDbContext).Assembly.FullName);
-                    optionsBuilder.EnableRetryOnFailure(5);
                     optionsBuilder.CommandTimeout(500);
                 }).UseSnakeCaseNamingConvention();
         DbContextFactory = new ProductsDbContextFactory(builder);

@@ -29,6 +29,7 @@
 
   <ItemGroup>
     <Folder Include="Core\Command\" />
+    <Folder Include="Infrastructure\Providers\" />
   </ItemGroup>
 
 </Project>

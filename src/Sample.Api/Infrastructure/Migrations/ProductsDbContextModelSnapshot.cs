@@ -79,13 +79,20 @@ namespace Sample.Api.Infrastructure.Migrations
                         .HasColumnType("jsonb")
                         .HasColumnName("data");
 
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)")
+                        .HasColumnName("name");
+
                     b.Property<long?>("ProcessedAtTimestamp")
                         .HasColumnType("bigint")
                         .HasColumnName("processed_at_timestamp");
 
                     b.Property<string>("Type")
                         .IsRequired()
-                        .HasColumnType("text")
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)")
                         .HasColumnName("type");
 
                     b.HasKey("Id")

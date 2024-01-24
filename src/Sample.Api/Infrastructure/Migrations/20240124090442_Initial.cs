@@ -28,7 +28,8 @@ namespace Sample.Api.Infrastructure.Migrations
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false),
-                    type = table.Column<string>(type: "text", nullable: false),
+                    name = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
+                    type = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
                     data = table.Column<string>(type: "jsonb", nullable: false),
                     created_at_timestamp = table.Column<long>(type: "bigint", nullable: false),
                     processed_at_timestamp = table.Column<long>(type: "bigint", nullable: true)

@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using Sample.Api.Core.Model;
 
 namespace Sample.Api.Infrastructure.EfCore;
@@ -37,7 +38,8 @@ public sealed class ProductsDbContext : DbContext
         {
             outBox.HasKey(x => x.Id);
             outBox.Property(x => x.Id).ValueGeneratedNever();
-            outBox.Property(x => x.Type).IsRequired();
+            outBox.Property(x => x.Type).IsRequired().HasMaxLength(255);
+            outBox.Property(x => x.Name).IsRequired().HasMaxLength(255);
             outBox.Property(x => x.Data).IsRequired().HasColumnType("jsonb");
             outBox.Property(x => x.CreatedAtTimestamp).IsRequired();
             outBox.Property(x => x.ProcessedAtTimestamp);
