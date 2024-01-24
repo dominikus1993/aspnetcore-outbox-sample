@@ -28,8 +28,20 @@ namespace Sample.Api.Infrastructure.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
-                    b.HasKey("Id")
+                    b.Property<long>("OrderNumber")
+                        .HasColumnType("bigint")
+                        .HasColumnName("order_number");
+
+                    b.Property<string>("State")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("state");
+
+                    b.HasKey("Id", "OrderNumber")
                         .HasName("pk_orders");
+
+                    b.HasIndex("OrderNumber")
+                        .HasDatabaseName("ix_orders_order_number");
 
                     b.ToTable("orders", (string)null);
                 });
@@ -108,6 +120,9 @@ namespace Sample.Api.Infrastructure.Migrations
                             b1.Property<Guid>("OrderId")
                                 .HasColumnType("uuid");
 
+                            b1.Property<long>("OrderNumber")
+                                .HasColumnType("bigint");
+
                             b1.Property<int>("Id")
                                 .ValueGeneratedOnAdd()
                                 .HasColumnType("integer");
@@ -118,15 +133,15 @@ namespace Sample.Api.Infrastructure.Migrations
                             b1.Property<int>("Quantity")
                                 .HasColumnType("integer");
 
-                            b1.HasKey("OrderId", "Id");
+                            b1.HasKey("OrderId", "OrderNumber", "Id");
 
                             b1.ToTable("orders");
 
                             b1.ToJson("items");
 
                             b1.WithOwner()
-                                .HasForeignKey("OrderId")
-                                .HasConstraintName("fk_orders_orders_order_id");
+                                .HasForeignKey("OrderId", "OrderNumber")
+                                .HasConstraintName("fk_orders_orders_order_id_order_number");
                         });
 
                     b.Navigation("Items");

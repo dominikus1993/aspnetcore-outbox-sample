@@ -16,11 +16,13 @@ namespace Sample.Api.Infrastructure.Migrations
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false),
+                    order_number = table.Column<long>(type: "bigint", nullable: false),
+                    state = table.Column<string>(type: "text", nullable: false),
                     items = table.Column<string>(type: "jsonb", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_orders", x => x.id);
+                    table.PrimaryKey("pk_orders", x => new { x.id, x.order_number });
                 });
 
             migrationBuilder.CreateTable(
@@ -53,6 +55,11 @@ namespace Sample.Api.Infrastructure.Migrations
                 {
                     table.PrimaryKey("pk_products", x => x.id);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "ix_orders_order_number",
+                table: "orders",
+                column: "order_number");
         }
 
         /// <inheritdoc />

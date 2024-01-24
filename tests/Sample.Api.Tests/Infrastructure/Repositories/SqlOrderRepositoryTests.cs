@@ -24,15 +24,17 @@ public sealed class SqlOrderRepositoryTests : IClassFixture<PostgresFixture>, ID
 
     [Theory]
     [AutoData]
-    public async Task TestCorrectOrder(Order order)
+    public async Task TestSaveNewOrder(Guid orderId, long orderNumber, OrderItem[] items)
     {
+        var order = Order.New(orderId, orderNumber, items);
         var res = await _orderRepository.SaveOrder(order);
         
         Assert.True(res.IsSuccess);
         
         var orderFromDb = await _orderRepository.GetOrderById(order.Id);
-
+        
         Assert.NotNull(orderFromDb);
+        Assert.Equal(OrderState.New, orderFromDb.State);
     }
     
     public void Dispose()

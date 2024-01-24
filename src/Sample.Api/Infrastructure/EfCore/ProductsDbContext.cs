@@ -27,7 +27,10 @@ public sealed class ProductsDbContext : DbContext
         });
         modelBuilder.Entity<Order>(order =>
         {
-            order.HasKey(x => x.Id);
+            order.HasKey(x => new { x.Id, x.OrderNumber });
+            order.HasIndex(x => x.OrderNumber);
+            order.Property(x => x.State).HasConversion<string>();
+            order.Property(x => x.OrderNumber).ValueGeneratedNever();
             order.Property(x => x.Id).ValueGeneratedNever();
             order.OwnsMany(x => x.Items, item =>
             {
@@ -38,6 +41,8 @@ public sealed class ProductsDbContext : DbContext
         {
             outBox.HasKey(x => x.Id);
             outBox.Property(x => x.Id).ValueGeneratedNever();
+            outBox.HasIndex(x => x.ProcessedAtTimestamp);
+            outBox.HasIndex(x => x.CreatedAtTimestamp);
             outBox.Property(x => x.Type).IsRequired().HasMaxLength(255);
             outBox.Property(x => x.Name).IsRequired().HasMaxLength(255);
             outBox.Property(x => x.Data).IsRequired().HasColumnType("jsonb");
