@@ -8,4 +8,10 @@ public sealed class OutBox
     public string Data { get; set; } = string.Empty;
     public long CreatedAtTimestamp { get; set; }
     public long? ProcessedAtTimestamp { get; set; }
+    
+    
+    public void MarkAsProcessed(TimeProvider provider)
+    {
+        ProcessedAtTimestamp = provider.GetUtcNow().ToUnixTimeMilliseconds();
+    }
 }

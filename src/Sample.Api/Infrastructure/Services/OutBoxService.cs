@@ -1,5 +1,6 @@
 ﻿using Sample.Api.Core.Events;
 using Sample.Api.Core.Repositories;
+using Sample.Api.Core.UseCases;
 
 namespace Sample.Api.Infrastructure.Services;
 
@@ -17,33 +18,17 @@ public sealed class OutBoxService : BackgroundService
         using var periodicTimer = new PeriodicTimer(TimeSpan.FromSeconds(10));
         while (!stoppingToken.IsCancellationRequested && await periodicTimer.WaitForNextTickAsync(stoppingToken))
         {
-            await Run(stoppingToken);
-        }
-    }
-
-    private async Task Run(CancellationToken cancellationToken)
-    {
-        await using var scope = _serviceProvider.CreateAsyncScope();
-        var outBoxRepository = scope.ServiceProvider.GetRequiredService<IOutBoxRepository>();
-
-        var outBox = await outBoxRepository.GetOldestNotProcessedEvents(cancellationToken);
-        while (outBox is not null)
-        {
-            var publisher = scope.ServiceProvider.GetRequiredService<IEventPublisher>();
-            var logger = scope.ServiceProvider.GetRequiredService<ILogger<OutBoxService>>();
-
-            var result = await publisher.Publish(outBox, cancellationToken);
-
-            if (!result.IsSuccess)
+            await using var scope = _serviceProvider.CreateAsyncScope();
+            try
             {
-                logger.LogError(result.ErrorValue, "Error while publishing event {@Event}", outBox);
+                var usecase = scope.ServiceProvider.GetRequiredService<SendEventsUseCase>();
+                await usecase.Run(stoppingToken);
             }
-
-            await outBoxRepository.MarkAsProcessed(outBox, cancellationToken);
-
-            logger.LogInformation("Event {@Event} published", outBox);
-            
-            outBox = await outBoxRepository.GetOldestNotProcessedEvents(cancellationToken);
+            catch (Exception e)
+            {
+                var logger = scope.ServiceProvider.GetRequiredService<ILogger<OutBoxService>>();
+                logger.LogError(e, "Error while executing SendEventsUseCase");
+            }
         }
     }
 }
