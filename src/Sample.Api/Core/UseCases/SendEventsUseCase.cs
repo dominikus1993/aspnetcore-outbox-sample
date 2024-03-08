@@ -18,23 +18,12 @@ public sealed class SendEventsUseCase
     }
     public async Task Run(CancellationToken cancellationToken = default)
     {
-
-        var outBox = await _outBoxRepository.GetOldestNotProcessedEvents(cancellationToken);
-        while (outBox is not null)
+        var res = await _outBoxRepository.ProcessOldestNotProcessedEvent(async (outbox, ct) => await _eventPublisher.Publish(outbox, ct), cancellationToken);
+        if (!res.IsSuccess)
         {
-            var result = await _eventPublisher.Publish(outBox, cancellationToken);
-
-            if (!result.IsSuccess)
-            {
-                _logger.LogError(result.ErrorValue, "Error while publishing event {@Event}", outBox);
-                continue;
-            }
-
-            await _outBoxRepository.MarkAsProcessed(outBox, cancellationToken);
-
-            _logger.LogInformation("Event {@Event} published", outBox);
-            
-            outBox = await _outBoxRepository.GetOldestNotProcessedEvents(cancellationToken);
+            var err = res.ErrorValue;
+            _logger.LogError(err, "Failed to process oldest not processed event");
+            throw new InvalidOperationException("Failed to process oldest not processed event", err);
         }
     }
 }

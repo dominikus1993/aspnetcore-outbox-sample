@@ -3,26 +3,32 @@
 namespace Sample.Api.Core.Model;
 
 [JsonPolymorphic]
-[JsonDerivedType(typeof(OrderSaved))]
+[JsonDerivedType(typeof(OrderSaved), OrderSaved.EventName)]
 public abstract class OutBoxEvent
 {
-    public Guid Id { get; init; }
-    public DateTimeOffset CreatedAt { get; init; }
-    public string Name { get; init; } = string.Empty;
+    public Guid Id { get; set; }
+    public DateTimeOffset CreatedAt { get; set; }
+    public string Name { get; set; } = string.Empty;
 }
 
 
 public sealed class OrderSaved : OutBoxEvent
 {
-    public Guid OrderId { get; init; }
-    public IReadOnlyList<OrderItem> Items { get; init; }
+    public const string EventName = "order.saved";
+    public Guid OrderId { get; set; }
+    public IReadOnlyList<OrderItem> Items { get; set; } = null!;
+
+    public OrderSaved()
+    {
+        
+    }
     
     public OrderSaved(Order order, TimeProvider provider)
     {
         ArgumentNullException.ThrowIfNull(order);
         Id = order.Id;
         CreatedAt = provider.GetUtcNow();
-        Name = "order.saved";
+        Name = EventName;
         OrderId = order.Id;
         Items = order.Items;
     }
