@@ -1,10 +1,9 @@
-﻿using EFCore.BulkExtensions;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Sample.Api.Core.Model;
 using Sample.Api.Core.Repositories;
 using Sample.Api.Infrastructure.EfCore;
 
-namespace Sample.Api.Infrastructure.Repositories;
+namespace Sample.Api.Infrastructure.Repositories.PostgreSql;
 
 public sealed class SqlProductsWriter : IProductsWriter
 {

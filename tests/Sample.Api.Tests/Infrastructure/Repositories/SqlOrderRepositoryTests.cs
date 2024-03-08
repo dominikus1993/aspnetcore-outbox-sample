@@ -4,6 +4,7 @@ using Sample.Api.Core.Model;
 using Sample.Api.Core.Repositories;
 using Sample.Api.Infrastructure.EfCore;
 using Sample.Api.Infrastructure.Repositories;
+using Sample.Api.Infrastructure.Repositories.PostgreSql;
 using Sample.Api.Tests.Fixtures;
 
 namespace Sample.Api.Tests.Infrastructure.Repositories;

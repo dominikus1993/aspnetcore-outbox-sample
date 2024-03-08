@@ -28,6 +28,7 @@
     <PackageVersion Include="Microsoft.Extensions.Telemetry.Abstractions" Version="8.2.0" />
     <PackageVersion Include="Microsoft.Extensions.TimeProvider.Testing" Version="8.2.0" />
     <PackageVersion Include="Microsoft.SourceLink.AzureRepos.Git" Version="8.0.0" />
+    <PackageVersion Include="MongoDB.Driver" Version="2.24.0" />
     <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.2" />
     <PackageVersion Include="SonarAnalyzer.CSharp" Version="8.48.0.56517">
       <PrivateAssets>all</PrivateAssets>
