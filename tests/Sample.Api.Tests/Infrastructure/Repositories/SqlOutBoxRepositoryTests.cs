@@ -49,6 +49,30 @@ public class SqlOutBoxRepositoryTests: IClassFixture<PostgresFixture>, IDisposab
         Assert.Null(events);
     }
     
+    [Theory]
+    [AutoData]
+    public async Task TestSaveNewOrderWhenProcessIsFailed(Guid orderId, long orderNumber, OrderItem[] items)
+    {
+        var order = Order.New(orderId, orderNumber, items);
+        var res = await _orderRepository.SaveOrder(order);
+        
+        Assert.True(res.IsSuccess);
+
+        var events = await _outBoxRepository.GetOldestNotProcessedEvents();
+        
+        Assert.NotNull(events);
+        var error = new InvalidOperationException("Error");
+        var result =
+            await _outBoxRepository.ProcessOldestNotProcessedEvent((_, _) =>
+                Task.FromResult<Result<Unit>>(Result.Failure<Unit>(error)));
+        
+        Assert.False(result.IsSuccess);
+
+        events = await _outBoxRepository.GetOldestNotProcessedEvents();
+        
+        Assert.NotNull(events);
+    }
+    
     public void Dispose()
     {
         _productsDbContext.CleanAllTables();
