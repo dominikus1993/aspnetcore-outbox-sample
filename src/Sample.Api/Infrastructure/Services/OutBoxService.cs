@@ -1,34 +1,30 @@
-﻿using Sample.Api.Core.Events;
+﻿using Coravel.Invocable;
+using Sample.Api.Core.Events;
 using Sample.Api.Core.Repositories;
 using Sample.Api.Core.UseCases;
 
 namespace Sample.Api.Infrastructure.Services;
 
-public sealed class OutBoxService : BackgroundService
+public sealed class OutBoxService : IInvocable
 {
-    private readonly IServiceProvider _serviceProvider;
+    private readonly ILogger<OutBoxService> _logger;
+    private readonly SendEventsUseCase _useCase;
 
-    public OutBoxService(IServiceProvider serviceProvider)
+    public OutBoxService(ILogger<OutBoxService> logger, SendEventsUseCase useCase)
     {
-        _serviceProvider = serviceProvider;
+        _logger = logger;
+        _useCase = useCase;
     }
 
-    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+    public async Task Invoke()
     {
-        using var periodicTimer = new PeriodicTimer(TimeSpan.FromSeconds(10));
-        while (!stoppingToken.IsCancellationRequested && await periodicTimer.WaitForNextTickAsync(stoppingToken))
+        try
         {
-            await using var scope = _serviceProvider.CreateAsyncScope();
-            try
-            {
-                var usecase = scope.ServiceProvider.GetRequiredService<SendEventsUseCase>();
-                await usecase.Run(stoppingToken);
-            }
-            catch (Exception e)
-            {
-                var logger = scope.ServiceProvider.GetRequiredService<ILogger<OutBoxService>>();
-                logger.LogError(e, "Error while executing SendEventsUseCase");
-            }
+            await _useCase.Run();
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Error while executing SendEventsUseCase");
         }
     }
 }

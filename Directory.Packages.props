@@ -2,6 +2,7 @@
   <ItemGroup>
     <PackageVersion Include="Alba" Version="7.4.1" />
     <PackageVersion Include="AutoFixture.Xunit2" Version="4.18.1" />
+    <PackageVersion Include="Coravel" Version="5.0.3" />
     <PackageVersion Include="Datadog.Trace.Bundle" Version="2.45.0" />
     <PackageVersion Include="EFCore.BulkExtensions.PostgreSql" Version="8.0.2" />
     <PackageVersion Include="EFCore.NamingConventions" Version="8.0.3" />

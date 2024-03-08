@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Coravel" />
     <PackageReference Include="EFCore.BulkExtensions.PostgreSql" />
     <PackageReference Include="EFCore.NamingConventions" />
     <PackageReference Include="FlexLabs.EntityFrameworkCore.Upsert" />

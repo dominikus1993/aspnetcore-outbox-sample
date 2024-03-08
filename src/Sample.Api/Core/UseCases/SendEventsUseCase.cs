@@ -16,7 +16,7 @@ public sealed class SendEventsUseCase
         _eventPublisher = eventPublisher;
         _logger = logger;
     }
-    public async Task Run(CancellationToken cancellationToken)
+    public async Task Run(CancellationToken cancellationToken = default)
     {
 
         var outBox = await _outBoxRepository.GetOldestNotProcessedEvents(cancellationToken);
