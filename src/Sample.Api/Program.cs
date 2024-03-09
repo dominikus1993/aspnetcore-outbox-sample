@@ -1,5 +1,7 @@
+using Coravel;
 using Microsoft.EntityFrameworkCore;
 using Sample.Api.Infrastructure.EfCore;
+using Sample.Api.Infrastructure.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,6 +24,14 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.Services.UseScheduler(scheduler =>
+{
+    scheduler
+        .Schedule<OutBoxService>()
+        .EverySecond()
+        .PreventOverlapping(nameof(OutBoxService));
+});
 
 string[] summaries =
 [

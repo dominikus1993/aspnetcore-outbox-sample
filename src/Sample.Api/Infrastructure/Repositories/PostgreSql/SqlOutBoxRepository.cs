@@ -55,8 +55,8 @@ public sealed class SqlOutBoxRepository : IOutBoxRepository
                 await session.RollbackAsync(cancellationToken);
                 return result;
             }
-
             record.MarkAsProcessed(_timeProvider);
+            
             _productsDbContext.OutBox.Update(record);
             await _productsDbContext.SaveChangesAsync(cancellationToken);
             await session.CommitAsync(cancellationToken);

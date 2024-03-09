@@ -444,17 +444,6 @@
           "System.Runtime.CompilerServices.Unsafe": "5.0.0"
         }
       },
-      "MongoDB.Driver": {
-        "type": "Transitive",
-        "resolved": "2.24.0",
-        "contentHash": "j1q11iMk3LN38ze6jgV1ATp+WKVVQbsGrhFkuOcHwRNtIk70TpLKjOD1Z3CCkyrzxCsUyhwk745tK2ASNOI4WA==",
-        "dependencies": {
-          "Microsoft.Extensions.Logging.Abstractions": "2.0.0",
-          "MongoDB.Bson": "2.24.0",
-          "MongoDB.Driver.Core": "2.24.0",
-          "MongoDB.Libmongocrypt": "1.8.2"
-        }
-      },
       "MongoDB.Driver.Core": {
         "type": "Transitive",
         "resolved": "2.24.0",
@@ -1703,6 +1692,18 @@
           "Microsoft.Extensions.ObjectPool": "8.0.2",
           "Microsoft.Extensions.Options": "8.0.2",
           "System.Diagnostics.DiagnosticSource": "8.0.0"
+        }
+      },
+      "MongoDB.Driver": {
+        "type": "CentralTransitive",
+        "requested": "[2.24.0, )",
+        "resolved": "2.24.0",
+        "contentHash": "j1q11iMk3LN38ze6jgV1ATp+WKVVQbsGrhFkuOcHwRNtIk70TpLKjOD1Z3CCkyrzxCsUyhwk745tK2ASNOI4WA==",
+        "dependencies": {
+          "Microsoft.Extensions.Logging.Abstractions": "2.0.0",
+          "MongoDB.Bson": "2.24.0",
+          "MongoDB.Driver.Core": "2.24.0",
+          "MongoDB.Libmongocrypt": "1.8.2"
         }
       },
       "Npgsql.EntityFrameworkCore.PostgreSQL": {
