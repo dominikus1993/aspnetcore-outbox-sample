@@ -1,5 +1,6 @@
 ﻿using Sample.Api.Core.Events;
 using Sample.Api.Core.Repositories;
+using Sample.Api.Infrastructure.EfCore;
 using Sample.Api.Infrastructure.Services;
 
 namespace Sample.Api.Core.UseCases;
@@ -18,12 +19,27 @@ public sealed class SendEventsUseCase
     }
     public async Task Run(CancellationToken cancellationToken = default)
     {
-        var res = await _outBoxRepository.ProcessOldestNotProcessedEvent(async (outbox, ct) => await _eventPublisher.Publish(outbox, ct), cancellationToken);
-        if (!res.IsSuccess)
+        try
         {
-            var err = res.ErrorValue;
-            _logger.LogError(err, "Failed to process oldest not processed event");
-            throw new InvalidOperationException("Failed to process oldest not processed event", err);
+            OutBox? outBox = await _outBoxRepository.GetOldestNotProcessedEvents(cancellationToken);
+            while (outBox is not null)
+            {
+                var result = await _eventPublisher.Publish(outBox, cancellationToken);
+                if (result.IsSuccess)
+                {
+                    await _outBoxRepository.MarkAsProcessed(outBox, cancellationToken);
+                    outBox = await _outBoxRepository.GetOldestNotProcessedEvents(cancellationToken);
+                }
+                else
+                {
+                    throw new InvalidOperationException("Failed to process event", result.ErrorValue);
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Failed to process event");
+            throw;
         }
     }
 }
