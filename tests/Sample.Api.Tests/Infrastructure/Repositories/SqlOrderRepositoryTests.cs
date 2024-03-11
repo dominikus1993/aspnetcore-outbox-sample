@@ -19,7 +19,7 @@ public sealed class SqlOrderRepositoryTests : IClassFixture<PostgresFixture>, ID
     {
         _postgresFixture = postgresFixture;
         _productsDbContext = _postgresFixture.DbContextFactory.CreateDbContext();
-        _orderRepository = new SqlOrderRepository(_productsDbContext, new OutBoxEventCreator(new FakeTimeProvider(_now)),
+        _orderRepository = new SqlOrderRepository(_postgresFixture.DbContextFactory, new OutBoxEventCreator(new FakeTimeProvider(_now)),
             new FakeTimeProvider(_now));
     }
 

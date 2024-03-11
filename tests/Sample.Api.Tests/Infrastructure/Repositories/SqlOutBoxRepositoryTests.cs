@@ -16,11 +16,12 @@ public class SqlOutBoxRepositoryTests: IClassFixture<PostgresFixture>, IDisposab
     private readonly ProductsDbContext _productsDbContext;
     private readonly IOutBoxRepository _outBoxRepository;
     private readonly DateTimeOffset _now = DateTimeOffset.UtcNow;
+    
     public SqlOutBoxRepositoryTests(PostgresFixture postgresFixture)
     {
         _postgresFixture = postgresFixture;
         _productsDbContext = _postgresFixture.DbContextFactory.CreateDbContext();
-        _orderRepository = new SqlOrderRepository(_productsDbContext, new OutBoxEventCreator(new FakeTimeProvider(_now)),
+        _orderRepository = new SqlOrderRepository(_postgresFixture.DbContextFactory, new OutBoxEventCreator(new FakeTimeProvider(_now)),
             new FakeTimeProvider(_now));
         _outBoxRepository = new SqlOutBoxRepository(_productsDbContext, new FakeTimeProvider(_now));
     }
