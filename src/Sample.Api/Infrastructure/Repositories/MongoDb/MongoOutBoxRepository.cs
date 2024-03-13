@@ -71,6 +71,12 @@ public sealed class MongoOutBoxRepository : IOutBoxRepository
         try
         {
             outBox.MarkAsProcessed(_timeProvider);
+            var res = await _mongoDatabase.OutBox().ReplaceOneAsync(o => o.Id == outBox.Id, outBox,
+                cancellationToken: cancellationToken);
+            if (!res.IsAcknowledged)        
+            {
+                return Result.Failure<Unit>(new InvalidOperationException("Failed to mark event as processed"));
+            }
             return Result.UnitResult;
         }
         catch (Exception e)
