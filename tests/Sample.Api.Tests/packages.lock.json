@@ -37,6 +37,15 @@
           "Microsoft.TestPlatform.TestHost": "17.9.0"
         }
       },
+      "Testcontainers.MongoDb": {
+        "type": "Direct",
+        "requested": "[3.7.0, )",
+        "resolved": "3.7.0",
+        "contentHash": "Cy8dlgvZSW3U6rrmLKwoiAnPpy167rAAKFVGfAPNwX358UJNrlW9isnxFDcAWwhYTogS26DNnRXx3RKiUQOOWQ==",
+        "dependencies": {
+          "Testcontainers": "3.7.0"
+        }
+      },
       "Testcontainers.PostgreSql": {
         "type": "Direct",
         "requested": "[3.7.0, )",
