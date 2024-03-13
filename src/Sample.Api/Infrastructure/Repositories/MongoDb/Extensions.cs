@@ -38,7 +38,15 @@ public static class MongoDbExtensions
         });
 
         var db = client.GetDatabase("sample");
-        
+        CreateIndexes(db);
         return (client, db);
+    }
+
+    private static void CreateIndexes(IMongoDatabase database)
+    {
+        var builder = Builders<EfCore.OutBox>.IndexKeys.Descending(x => x.CreatedAtTimestamp);
+        var outbox = database.OutBox();
+        var model = new CreateIndexModel<OutBox>(builder);
+        outbox.Indexes.CreateOne(model);
     }
 }

@@ -1,4 +1,6 @@
-﻿using MongoDB.Driver;
+﻿using Microsoft.EntityFrameworkCore.Internal;
+using MongoDB.Driver;
+using Sample.Api.Infrastructure.Repositories.MongoDb;
 using Testcontainers.MongoDb;
 
 namespace Sample.Api.Tests.Fixtures;
@@ -17,18 +19,24 @@ public sealed class MongoFixture : IAsyncLifetime
     public async Task InitializeAsync()
     {
         await MongoDbContainer.StartAsync();
-        await MigrateAsync();
+        var (mongoClient, mongoDatabase) = MongoDbExtensions.SetupMongoDd(MongoDbContainer.GetConnectionString());
+        Client = mongoClient;
+        Database = mongoDatabase;
     }
-
-    public async Task MigrateAsync()
-    {
-        await using var context = await DbContextFactory.CreateDbContextAsync();
-        await context.Database.MigrateAsync();
-    }
+    
     public void Clean()
     {
-        using var context = DbContextFactory.CreateDbContext();
-        context.CleanAllTables();
+        var collections = Database.ListCollectionNames();
+        while (collections.MoveNext())
+        {
+            var collection = collections.Current;
+            var colection = collection.FirstOrDefault();
+            
+            if (colection is not null)
+            {
+                Database.DropCollection(colection);
+            }
+        }
     }
 
     public async Task DisposeAsync()
