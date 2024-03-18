@@ -24,15 +24,23 @@ public sealed class OutboxInterceptor : SaveChangesInterceptor
             return base.SavingChangesAsync(eventData, result, cancellationToken);
         }
         
-        var order = eventData.Context.ChangeTracker.Entries<Order>().Select(e => e.Entity).FirstOrDefault();
-        if (order is null)
+        var order = eventData.Context.ChangeTracker.Entries<Order>().Select(e => e.Entity).ToArray();
+        if (order is null or {Length: 0 })
         {
             return base.SavingChangesAsync(eventData, result, cancellationToken);
         }
-
-        var outBox = _creator.Create(new OrderSaved(order, _timeProvider));
+    
+        var outBoxs = Create(order);
         
-        eventData.Context.Add(outBox);
+        eventData.Context.AddRange(outBoxs);
         return base.SavingChangesAsync(eventData, result, cancellationToken);
+    }
+
+    private IEnumerable<OutBox> Create(IEnumerable<Order> orders)
+    {
+        foreach (var order in orders)
+        {
+            yield return _creator.Create(new OrderSaved(order, _timeProvider));
+        }
     }
 }
